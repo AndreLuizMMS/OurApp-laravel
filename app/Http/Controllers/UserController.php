@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Follow;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -20,12 +21,20 @@ class UserController extends Controller {
 
     public function profileView(User $user) {
         $userPosts =  $user->posts()->get();
+        $alreadyFollows = 0;
+
+        if (auth()->check()) {
+            $alreadyFollows = Follow::where([
+                ['user_id', '=', auth()->user()->id],
+                ['followedUser', '=', $user->id]
+            ])->count();
+        }
+
         return view(
             'profile-posts',
-            ['user' => $user, 'posts' => $userPosts]
+            ['user' => $user, 'posts' => $userPosts, 'alreadyFollows' => $alreadyFollows]
         );
     }
-
 
     // CRUD --------------------------------------------------------------------------------------
     public function manageAvatarView() {
