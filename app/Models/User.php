@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable {
     use HasApiTokens, HasFactory, Notifiable;
@@ -22,8 +24,17 @@ class User extends Authenticatable {
         'password',
     ];
 
+    protected function getAvatar(): Attribute {
+        return Attribute::make(get: function ($value) {
+            if (auth()->user()->avatar !== '') {
+                return '/storage/avatars/' . auth()->user()->avatar;
+            }
+            return '/storage/default.png';
+        });
+    }
+
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for serialization.janaina 
      *
      * @var array<int, string>
      */
@@ -41,7 +52,6 @@ class User extends Authenticatable {
         'email_verified_at' => 'datetime',
 
     ];
-
 
     public function posts() {
         return $this->hasMany(Post::class, 'user_id');
