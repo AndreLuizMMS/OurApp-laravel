@@ -17,36 +17,30 @@ use Illuminate\Support\Facades\Gate;
 |
 */
 
-// ---------------------- User --------------------------------------------------------------------------
-// View
-Route::get('/', [UserController::class, 'homePageView'])->name('login'); // view homepage
-// Actions
-Route::post('/register', [UserController::class, 'registerUser'])->middleware('guest'); // create new user
-Route::post('/login', [UserController::class, 'loginUser'])->middleware('guest'); // user login 
-Route::post('/logout', [UserController::class, 'logoutUser'])->middleware('mustBeLogged'); // user logout 
+Route::controller(UserController::class)->group(function () {
+  // View
+  Route::get('/', 'homePageView');
+  Route::get('/profile/{user:username}', 'profileView');
+  Route::get('/manage-avatar', 'manageAvatarView')->middleware('mustBeLogged');
+  // Actions
+  Route::post('/register', 'registerUser')->middleware('guest');
+  Route::post('/login', 'loginUser')->middleware('guest');
+  Route::post('/logout', 'logoutUser')->middleware('mustBeLogged');
+  Route::post('/manage-avatar', 'storeNewAvatar')->middleware('mustBeLogged');
+});
 
+Route::controller(BlogController::class)->group(function () {
+  // View
+  Route::get('/create-post', 'createPostView')->middleware('mustBeLogged');
+  Route::get('/post/{post}', 'showSinglePostView');
+  Route::get('/post/{post}/edit', 'showEditPostView')->middleware('can:update,post');
+  // Actions
+  Route::post('/publish-post', 'publishPost')->middleware('mustBeLogged');
+  Route::delete('/post/{post}', 'deletePost')->middleware('can:delete,post');
+  Route::put('/post/{post}', 'updatePost')->middleware('can:update,post');
+});
 
-// ----------------------- Blog ---------------------------------------------------------------------------------
-// View
-Route::get('/create-post', [BlogController::class, 'createPostView'])->middleware('mustBeLogged'); // create-post
-Route::get('/post/{post}', [BlogController::class, 'showSinglePostView']); // single-post
-Route::get('/post/{post}/edit', [BlogController::class, 'showEditPostView'])->middleware('can:update,post'); // edit-post
-
-// Actions
-Route::post('/publish-post', [BlogController::class, 'publishPost'])->middleware('mustBeLogged'); // create post
-Route::delete('/post/{post}', [BlogController::class, 'deletePost'])->middleware('can:delete,post'); // delete psot
-Route::put('/post/{post}', [BlogController::class, 'updatePost'])->middleware('can:update,post'); // update post
-
-
-// ---------------------- Profile -----------------------------------------------------------------------
-// View
-Route::get('/profile/{user:username}', [UserController::class, 'profileView']);  // profile-posts
-Route::get('/manage-avatar', [UserController::class, 'manageAvatarView'])->middleware('mustBeLogged');  // manage-avatar
-
-//Actions
-Route::post('/manage-avatar', [UserController::class, 'storeNewAvatar'])->middleware('mustBeLogged'); // manage-avatar
-
-
-// ----------------------- Follow -----------------------------------------------------------------------
-Route::post('/follow/{user:username}', [FollowController::class, 'followUser'])->middleware('mustBeLogged'); // follow some user
-Route::post('/unfollow/{user:username}', [FollowController::class, 'unfollowUser'])->middleware('mustBeLogged'); // unfollow some user
+Route::controller(FollowController::class)->group(function () {
+  Route::post('/follow/{user:username}', 'followUser')->middleware('mustBeLogged'); // follow some user
+  Route::post('/unfollow/{user:username}', 'unfollowUser')->middleware('mustBeLogged'); // unfollow some user
+});
