@@ -2,14 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Follow;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Follow;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\View;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends Controller {
+
+    private function getSharedData(User $user) {
+        $alreadyFollows = 0;
+        if (auth()->check()) {
+            $alreadyFollows = Follow::where([
+                ['user_id', '=', auth()->user()->id],
+                ['followedUser', '=', $user->id]
+            ])->count();
+        }
+        View::share('sharedData', ['user' => $user, 'alreadyFollows' => $alreadyFollows, 'postCount' => count($user->posts()->get())]);
+    }
 
     // View --------------------------------------------------------------------------------------
     public function homePageView() {
@@ -20,20 +32,18 @@ class UserController extends Controller {
     }
 
     public function profileView(User $user) {
-        $userPosts =  $user->posts()->get();
-        $alreadyFollows = 0;
+        $this->getSharedData($user);
+        return view('profile-posts', ['posts' => $user->posts()->get()]);
+    }
 
-        if (auth()->check()) {
-            $alreadyFollows = Follow::where([
-                ['user_id', '=', auth()->user()->id],
-                ['followedUser', '=', $user->id]
-            ])->count();
-        }
+    public function profileFollowersView(User $user,) {
+        $this->getSharedData($user);
+        return view('profile-followers', ['followers' => $user->followers()->get()]);
+    }
 
-        return view(
-            'profile-posts',
-            ['user' => $user, 'posts' => $userPosts, 'alreadyFollows' => $alreadyFollows]
-        );
+    public function profileFollowingView(User $user) {
+        $this->getSharedData($user);
+        return view('profile-following', ['userFollows' => $user->UserFollows()->get()]);
     }
 
     // CRUD --------------------------------------------------------------------------------------

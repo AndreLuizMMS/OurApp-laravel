@@ -22,6 +22,9 @@ Route::controller(UserController::class)->group(function () {
   Route::get('/', 'homePageView');
   Route::get('/profile/{user:username}', 'profileView');
   Route::get('/manage-avatar', 'manageAvatarView')->middleware('mustBeLogged');
+  Route::get('/profile/{user:username}/followers', 'profileFollowersView');
+  Route::get('/profile/{user:username}/following', 'profileFollowingView');
+  
   // Actions
   Route::post('/register', 'registerUser')->middleware('guest');
   Route::post('/login', 'loginUser')->middleware('guest');
@@ -41,6 +44,7 @@ Route::controller(BlogController::class)->group(function () {
 });
 
 Route::controller(FollowController::class)->group(function () {
-  Route::post('/follow/{user:username}', 'followUser')->middleware('mustBeLogged'); // follow some user
-  Route::post('/unfollow/{user:username}', 'unfollowUser')->middleware('mustBeLogged'); // unfollow some user
+  // Actions
+  Route::post('/follow/{user:username}', 'followUser')->middleware('mustBeLogged');
+  Route::post('/unfollow/{user:username}', 'unfollowUser')->middleware('mustBeLogged');
 });
