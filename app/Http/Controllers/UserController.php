@@ -20,7 +20,17 @@ class UserController extends Controller {
                 ['followedUser', '=', $user->id]
             ])->count();
         }
-        View::share('sharedData', ['user' => $user, 'alreadyFollows' => $alreadyFollows, 'postCount' => count($user->posts()->get())]);
+
+        View::share(
+            'sharedData',
+            [
+                'user' => $user,
+                'alreadyFollows' => $alreadyFollows,
+                'postCount' => count($user->posts()->get()),
+                'followersCount' => $user->followers()->get()->count(),
+                'followingCount' => $user->isFollowing()->get()->count()
+            ]
+        );
     }
 
     // View --------------------------------------------------------------------------------------
@@ -38,12 +48,12 @@ class UserController extends Controller {
 
     public function profileFollowersView(User $user,) {
         $this->getSharedData($user);
-        return view('profile-followers', ['followers' => $user->followers()->get()]);
+        return view('profile-followers', ['userFollowers' => $user->followers()->get()]);
     }
 
     public function profileFollowingView(User $user) {
         $this->getSharedData($user);
-        return view('profile-following', ['userFollows' => $user->UserFollows()->get()]);
+        return view('profile-following', ['userFollows' => $user->isFollowing()->get()]);
     }
 
     // CRUD --------------------------------------------------------------------------------------

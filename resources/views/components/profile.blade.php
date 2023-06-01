@@ -38,11 +38,11 @@
       </a>
       <a href="/profile/{{ $sharedData['user']->username }}/followers"
         class="profile-nav-link nav-item nav-link {{ Request::segment(3) == 'followers' ? 'active' : '' }}">
-        Followers: 3
+        Followers: {{ $sharedData['followersCount'] }}
       </a>
       <a href="/profile/{{ $sharedData['user']->username }}/following"
         class="profile-nav-link nav-item nav-link {{ Request::segment(3) == 'following' ? 'active' : '' }}">
-        Following: 2
+        Following: {{ $sharedData['followingCount'] }}
       </a>
     </div>
 
