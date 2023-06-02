@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Gate;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +38,7 @@ Route::controller(BlogController::class)->group(function () {
   Route::get('/post/{post}', 'showSinglePostView');
   Route::get('/post/{post}/edit', 'showEditPostView')->middleware('can:update,post');
   Route::get('/search/{term}', 'searchView');
+
   // Actions
   Route::post('/publish-post', 'publishPost')->middleware('mustBeLogged');
   Route::delete('/post/{post}', 'deletePost')->middleware('can:delete,post');
@@ -48,4 +49,8 @@ Route::controller(FollowController::class)->group(function () {
   // Actions
   Route::post('/follow/{user:username}', 'followUser')->middleware('mustBeLogged');
   Route::post('/unfollow/{user:username}', 'unfollowUser')->middleware('mustBeLogged');
+});
+
+Route::controller(ChatController::class)->group(function () {
+  Route::get('/send-chat-message', 'displayChat')->middleware('mustBeLogged');
 });

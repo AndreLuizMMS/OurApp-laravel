@@ -33,9 +33,12 @@
       @auth
         <div class="flex-row my-3 my-md-0">
           <a href="#" class="text-white mr-2 header-search-icon" title="Search" data-toggle="tooltip"
-            data-placement="bottom"><i class="fas fa-search"></i></a>
-          <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom"><i
-              class="fas fa-comment"></i></span>
+            data-placement="bottom">
+            <i class="fas fa-search">{{-- search --}}</i>
+          </a>
+          <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom">
+            <i class="fas fa-comment">{{-- chat --}}</i>
+          </span>
           <a href="/profile/{{ auth()->user()->username }}" class="mr-2">
             <img title="My Profile" data-toggle="tooltip" data-placement="bottom"
               style="width: 32px; height: 32px; border-radius: 16px" src="{{ auth()->user()->getAvatar }}" />
@@ -93,6 +96,13 @@
       rights reserved.
     </p>
   </footer>
+
+  @auth
+    <div data-username='{{ auth()->user()->username }}' data-avatar='{{ auth()->user()->getAvatar }}'
+      class="chat-wrapper shadow border-top border-left border-right" id="chat-wrapper">
+
+    </div>
+  @endauth
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
