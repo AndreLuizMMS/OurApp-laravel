@@ -19,28 +19,32 @@ class DatabaseSeeder extends Seeder {
       'username' => 'user1',
       'email' => 'brad@local',
       'password' => Hash::make('asdasdasd'),
-      'isAdmin' => 1
+      'isAdmin' => 1,
+      'avatar' => ""
     ]);
 
     DB::table('users')->insert([
       'id' => 200,
       'username' => 'user2',
       'email' => 'barksalot@local',
-      'password' => Hash::make('asdasdasd')
+      'password' => Hash::make('asdasdasd'),
+      'avatar' => ""
     ]);
 
     DB::table('users')->insert([
       'id' => 300,
       'username' => 'user3',
       'email' => 'meowsalot@local',
-      'password' => Hash::make('asdasdasd')
+      'password' => Hash::make('asdasdasd'),
+      'avatar' => ""
     ]);
 
     DB::table('posts')->insert([
       'user_id' => 100,
       'title' => 'My First Post',
       'body' => 'Lorem ipsum this is my post.',
-      'created_at' => date("Y-m-d H:i:s")
+      'created_at' => date("Y-m-d H:i:s"),
+
     ]);
 
     DB::table('posts')->insert([
@@ -60,6 +64,7 @@ class DatabaseSeeder extends Seeder {
     DB::table('follows')->insert([
       'user_id' => 200,
       'followeduser' => 100
+
     ]);
 
     DB::table('follows')->insert([

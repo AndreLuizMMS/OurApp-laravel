@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OurExampleEvent;
 use App\Models\User;
 use App\Models\Follow;
 use Illuminate\Validation\Rule;
@@ -86,6 +87,7 @@ class UserController extends Controller {
     // User Actions --------------------------------------------------------------------------------------
     public function logoutUser() {
         auth()->logout();
+        event(new OurExampleEvent());
         return redirect("/")->with('success', 'User logged out!');
     }
 
@@ -116,6 +118,7 @@ class UserController extends Controller {
 
         if ($auth) {
             $request->session()->regenerate();
+            event(new OurExampleEvent());
             return redirect("/")->with('success', 'User logged in !');
         }
         return redirect("/")->with('failed', 'Invalid login');
