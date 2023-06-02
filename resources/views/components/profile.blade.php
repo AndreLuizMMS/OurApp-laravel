@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout :docTitle="$sharedData['user']->username">
   <div class="container py-md-5 container--narrow">
     <h2>
       <img class="avatar-small" src="{{ auth()->user()->getAvatar }}" />

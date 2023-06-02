@@ -34,9 +34,10 @@ class UserController extends Controller {
     }
 
     // View --------------------------------------------------------------------------------------
-    public function homePageView() {
+    public function homePageView(User $user) {
+        $this->getSharedData($user);
         if (auth()->check()) {
-            return view('hompage-feed');
+            return view('hompage-feed', ['posts' => auth()->user()->feedPosts()->latest()->paginate(1)]);
         }
         return view('homepage');
     }

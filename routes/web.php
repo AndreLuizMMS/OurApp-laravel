@@ -24,7 +24,7 @@ Route::controller(UserController::class)->group(function () {
   Route::get('/manage-avatar', 'manageAvatarView')->middleware('mustBeLogged');
   Route::get('/profile/{user:username}/followers', 'profileFollowersView');
   Route::get('/profile/{user:username}/following', 'profileFollowingView');
-  
+
   // Actions
   Route::post('/register', 'registerUser')->middleware('guest');
   Route::post('/login', 'loginUser')->middleware('guest');
@@ -37,6 +37,7 @@ Route::controller(BlogController::class)->group(function () {
   Route::get('/create-post', 'createPostView')->middleware('mustBeLogged');
   Route::get('/post/{post}', 'showSinglePostView');
   Route::get('/post/{post}/edit', 'showEditPostView')->middleware('can:update,post');
+  Route::get('/search/{term}', 'searchView');
   // Actions
   Route::post('/publish-post', 'publishPost')->middleware('mustBeLogged');
   Route::delete('/post/{post}', 'deletePost')->middleware('can:delete,post');

@@ -13,14 +13,21 @@ class BlogController extends Controller {
     public function showEditPostView(Post $post) {
         return view('edit-post', ['post' => $post]);
     }
+
     public function showSinglePostView(Post $post, Request $request,) {
         $post['body'] = Str::markdown($post->body);
         return view('single-post', ['post' => $post]);
     }
+
     public function createPostView() {
         return view('create-post');
     }
 
+    public function searchView($term) {
+        $posts = Post::search($term)->get();
+        $posts->load('user:id,username');
+        return $posts;
+    }
 
     // CRUD --------------------------------------------------------------------------------------
     public function updatePost(Post $post, Request $request) {
