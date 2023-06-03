@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendNewPostEmail;
+use App\Mail\NewPostEmail;
 use App\Models\Post;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Mail;
 
 class BlogController extends Controller {
 
@@ -51,12 +53,15 @@ class BlogController extends Controller {
             'title' => ['required'],
             'body' => ['required'],
         ]);
-
         stripTags($incomingFields);
         $incomingFields['user_id'] = auth()->id();
-
-        $postId = Post::create($incomingFields)->id;
-        return redirect("/post/{$postId}")->with('success', "New post created");
+        $newPost = Post::create($incomingFields);
+        dispatch(new SendNewPostEmail([
+            'sendTo' => auth()->user()->email,
+            'username' => auth()->user()->username,
+            'title' => $newPost->title
+        ]));
+        return redirect("/post/{$newPost->id}")->with('success', "New post created");
     }
 }
 
